@@ -1,0 +1,14 @@
+#login {
+    text-align: center;
+}
+
+.form-group input {
+    width: 30%;
+    height: 40px;
+    margin-left: 35%;
+}
+
+#fileupload {
+    text-align: center;
+    margin-top: 20%;
+}
