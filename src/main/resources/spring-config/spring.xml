@@ -50,17 +50,4 @@
         <!-- 指定所上传文件的总大小不能超过200KB。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->
         <property name="maxUploadSize" value="20000"/>
     </bean>
-
-    <bean id="exceptionResolver"
-          class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-        <property name="exceptionMappings">
-            <props>
-                <!-- 遇到MaxUploadSizeExceededException异常时，自动跳转到XXX页面 -->
-                <prop
-                        key="org.springframework.web.multipart.MaxUploadSizeExceededException">/user/login
-                </prop>
-            </props>
-        </property>
-    </bean>
-
 </beans>

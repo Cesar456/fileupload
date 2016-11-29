@@ -11,6 +11,8 @@ public class UploadFile {
 
     private Date uploadtime;
 
+    private String suffix;
+
     public Integer getId() {
         return id;
     }
@@ -43,6 +45,14 @@ public class UploadFile {
         this.uploadtime = uploadtime;
     }
 
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix == null ? null : suffix.trim();
+    }
+
     @Override
     public String toString() {
         return "UploadFile{" +
@@ -50,6 +60,7 @@ public class UploadFile {
                 ", filename='" + filename + '\'' +
                 ", path='" + path + '\'' +
                 ", uploadtime=" + uploadtime +
+                ", suffix='" + suffix + '\'' +
                 '}';
     }
 }

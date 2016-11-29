@@ -5,7 +5,8 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="filename" property="filename" jdbcType="VARCHAR" />
     <result column="path" property="path" jdbcType="VARCHAR" />
-    <result column="uploadtime" property="uploadtime" jdbcType="TIME" />
+    <result column="uploadtime" property="uploadtime" jdbcType="TIMESTAMP" />
+    <result column="suffix" property="suffix" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -66,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, filename, path, uploadtime
+    id, filename, path, uploadtime, suffix
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.cesar.fileuploadtest.model.UploadFileExample" >
     select
@@ -101,9 +102,9 @@
   </delete>
   <insert id="insert" parameterType="com.cesar.fileuploadtest.model.UploadFile" >
     insert into upload_file (id, filename, path, 
-      uploadtime)
+      uploadtime, suffix)
     values (#{id,jdbcType=INTEGER}, #{filename,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, 
-      #{uploadtime,jdbcType=TIME})
+      #{uploadtime,jdbcType=TIMESTAMP}, #{suffix,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.cesar.fileuploadtest.model.UploadFile" >
     insert into upload_file
@@ -120,6 +121,9 @@
       <if test="uploadtime != null" >
         uploadtime,
       </if>
+      <if test="suffix != null" >
+        suffix,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -132,7 +136,10 @@
         #{path,jdbcType=VARCHAR},
       </if>
       <if test="uploadtime != null" >
-        #{uploadtime,jdbcType=TIME},
+        #{uploadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="suffix != null" >
+        #{suffix,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -155,7 +162,10 @@
         path = #{record.path,jdbcType=VARCHAR},
       </if>
       <if test="record.uploadtime != null" >
-        uploadtime = #{record.uploadtime,jdbcType=TIME},
+        uploadtime = #{record.uploadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.suffix != null" >
+        suffix = #{record.suffix,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -167,7 +177,8 @@
     set id = #{record.id,jdbcType=INTEGER},
       filename = #{record.filename,jdbcType=VARCHAR},
       path = #{record.path,jdbcType=VARCHAR},
-      uploadtime = #{record.uploadtime,jdbcType=TIME}
+      uploadtime = #{record.uploadtime,jdbcType=TIMESTAMP},
+      suffix = #{record.suffix,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -182,7 +193,10 @@
         path = #{path,jdbcType=VARCHAR},
       </if>
       <if test="uploadtime != null" >
-        uploadtime = #{uploadtime,jdbcType=TIME},
+        uploadtime = #{uploadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="suffix != null" >
+        suffix = #{suffix,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -191,7 +205,8 @@
     update upload_file
     set filename = #{filename,jdbcType=VARCHAR},
       path = #{path,jdbcType=VARCHAR},
-      uploadtime = #{uploadtime,jdbcType=TIME}
+      uploadtime = #{uploadtime,jdbcType=TIMESTAMP},
+      suffix = #{suffix,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

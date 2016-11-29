@@ -1,68 +1,96 @@
 package com.cesar.fileuploadtest.service;
 
+import com.alibaba.druid.util.StringUtils;
 import com.cesar.fileuploadtest.dao.UploadFileMapper;
 import com.cesar.fileuploadtest.model.UploadFile;
-import org.apache.commons.io.FileUtils;
+import com.cesar.fileuploadtest.model.UploadFileExample;
+import com.cesar.fileuploadtest.util.TimeUtil;
+import com.cesar.fileuploadtest.util.Utils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.Date;
-import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by Cesar on 2016/11/28.
+ * 对文件上传下载进行操作
  */
 @Service
 public class FileService {
 
-    org.slf4j.Logger logger = LoggerFactory.getLogger(FileService.class);
+    private Logger logger = LoggerFactory.getLogger(FileService.class);
+
+    private static String FILE_PARENT_PATH = "../webapps/fileupload/upload/file/";
 
     @Autowired
     private UploadFileMapper fileMapper;
 
-    public void save(HttpServletRequest request) {
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());
-        //判断 request 是否有文件上传,即多部分请求
-        if (multipartResolver.isMultipart(request)) {
-            //转换成多部分request
-            MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
-            //取得request中的所有文件名
-            Iterator<String> iter = multiRequest.getFileNames();
-            while (iter.hasNext()) {
-                //记录上传过程起始时的时间，用来计算上传时间
-                int pre = (int) System.currentTimeMillis();
-                //取得上传文件
-                MultipartFile file = multiRequest.getFile(iter.next());
-                if (file != null) {
-                    //取得当前上传文件的文件名称
-                    String myFileName = file.getOriginalFilename();
-                    //如果名称不为“”,说明该文件存在，否则说明该文件不存在
-                    if (!StringUtils.isEmpty(myFileName.trim())) {
-                        System.out.println(myFileName);
-                        //重命名上传后的文件名
-                        String fileName = "demoUpload" + file.getOriginalFilename();
-                        //定义上传路径
-                        String path = "E:/" + fileName;
-                        File localFile = new File(path);
-                        try {
-                            file.transferTo(localFile);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                int finaltime = (int) System.currentTimeMillis();
-                System.out.println(finaltime - pre);
+    public void save(CommonsMultipartFile file) {
+        UploadFile uploadFile = new UploadFile();
+        uploadFile.setFilename(file.getOriginalFilename());
+        uploadFile.setUploadtime(new Date());
+
+        // 检查父目录是否存在
+        File todayFolder = new File(FILE_PARENT_PATH + TimeUtil.getDateTime());
+        if (!todayFolder.exists()) {
+            todayFolder.mkdirs();
+        }
+
+        // 获取文件后缀名
+        String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
+
+        String filePath = todayFolder.getAbsolutePath() + "/" + System.currentTimeMillis() + "." + suffix;
+        File newFile = new File(filePath);
+        try {
+            file.transferTo(newFile);
+            uploadFile.setPath(newFile.getAbsolutePath());
+            uploadFile.setSuffix(suffix);
+            fileMapper.insert(uploadFile);
+            logger.info("上传文件" + uploadFile.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public List<UploadFile> getUploadFiles(int pagesize, int pagenum){
+        UploadFileExample example = new UploadFileExample();
+        UploadFileExample.Criteria criteria = example.createCriteria();
+        example.setOrderByClause("uploadtime");
+        List<UploadFile> uploadFiles = fileMapper.selectByExample(example);
+        return uploadFiles;
+    }
+
+    public void download(int fileId, HttpServletRequest request, HttpServletResponse response) {
+        UploadFile file = fileMapper.selectByPrimaryKey(fileId);
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("multipart/form-data");
+
+        String name = Utils.transHanziToPinyin(file.getFilename());
+        if(StringUtils.isEmpty(name)){
+            name = file.getPath().substring(file.getPath().lastIndexOf("\\")+1);
+        }
+        response.setHeader("Content-Disposition", "attachment;fileName="
+                + name);
+        try {
+            InputStream inputStream = new FileInputStream(new File(file.getPath()));
+            OutputStream os = response.getOutputStream();
+            byte[] b = new byte[2048];
+            int length;
+            while ((length = inputStream.read(b)) > 0) {
+                os.write(b, 0, length);
             }
+            os.close();
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

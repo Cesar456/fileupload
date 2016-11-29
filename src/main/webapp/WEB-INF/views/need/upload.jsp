@@ -20,9 +20,11 @@
 
 <div id="fileupload">
     <form enctype="multipart/form-data" action="<c:url value="/file/upload"/>" method="post">
-        <input type="file" name="uploadfile">
+        <input type="file" name="file">
         <input type="submit" value="提交">
     </form>
+
+    <a href="./filelist?pagesize=1&pagenum=1">所有文件</a>
     <%--<input id="uploadfile" type="file" style="display:none">--%>
     <%--<div class="input-append">--%>
     <%--<label for="photoCover">--%>

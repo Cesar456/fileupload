@@ -2,7 +2,6 @@ package com.cesar.fileuploadtest.model;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 public class UploadFileExample {
@@ -104,32 +103,6 @@ public class UploadFileExample {
                 throw new RuntimeException("Between values for " + property + " cannot be null");
             }
             criteria.add(new Criterion(condition, value1, value2));
-        }
-
-        protected void addCriterionForJDBCTime(String condition, Date value, String property) {
-            if (value == null) {
-                throw new RuntimeException("Value for " + property + " cannot be null");
-            }
-            addCriterion(condition, new java.sql.Time(value.getTime()), property);
-        }
-
-        protected void addCriterionForJDBCTime(String condition, List<Date> values, String property) {
-            if (values == null || values.size() == 0) {
-                throw new RuntimeException("Value list for " + property + " cannot be null or empty");
-            }
-            List<java.sql.Time> timeList = new ArrayList<java.sql.Time>();
-            Iterator<Date> iter = values.iterator();
-            while (iter.hasNext()) {
-                timeList.add(new java.sql.Time(iter.next().getTime()));
-            }
-            addCriterion(condition, timeList, property);
-        }
-
-        protected void addCriterionForJDBCTime(String condition, Date value1, Date value2, String property) {
-            if (value1 == null || value2 == null) {
-                throw new RuntimeException("Between values for " + property + " cannot be null");
-            }
-            addCriterion(condition, new java.sql.Time(value1.getTime()), new java.sql.Time(value2.getTime()), property);
         }
 
         public Criteria andIdIsNull() {
@@ -343,52 +316,122 @@ public class UploadFileExample {
         }
 
         public Criteria andUploadtimeEqualTo(Date value) {
-            addCriterionForJDBCTime("uploadtime =", value, "uploadtime");
+            addCriterion("uploadtime =", value, "uploadtime");
             return (Criteria) this;
         }
 
         public Criteria andUploadtimeNotEqualTo(Date value) {
-            addCriterionForJDBCTime("uploadtime <>", value, "uploadtime");
+            addCriterion("uploadtime <>", value, "uploadtime");
             return (Criteria) this;
         }
 
         public Criteria andUploadtimeGreaterThan(Date value) {
-            addCriterionForJDBCTime("uploadtime >", value, "uploadtime");
+            addCriterion("uploadtime >", value, "uploadtime");
             return (Criteria) this;
         }
 
         public Criteria andUploadtimeGreaterThanOrEqualTo(Date value) {
-            addCriterionForJDBCTime("uploadtime >=", value, "uploadtime");
+            addCriterion("uploadtime >=", value, "uploadtime");
             return (Criteria) this;
         }
 
         public Criteria andUploadtimeLessThan(Date value) {
-            addCriterionForJDBCTime("uploadtime <", value, "uploadtime");
+            addCriterion("uploadtime <", value, "uploadtime");
             return (Criteria) this;
         }
 
         public Criteria andUploadtimeLessThanOrEqualTo(Date value) {
-            addCriterionForJDBCTime("uploadtime <=", value, "uploadtime");
+            addCriterion("uploadtime <=", value, "uploadtime");
             return (Criteria) this;
         }
 
         public Criteria andUploadtimeIn(List<Date> values) {
-            addCriterionForJDBCTime("uploadtime in", values, "uploadtime");
+            addCriterion("uploadtime in", values, "uploadtime");
             return (Criteria) this;
         }
 
         public Criteria andUploadtimeNotIn(List<Date> values) {
-            addCriterionForJDBCTime("uploadtime not in", values, "uploadtime");
+            addCriterion("uploadtime not in", values, "uploadtime");
             return (Criteria) this;
         }
 
         public Criteria andUploadtimeBetween(Date value1, Date value2) {
-            addCriterionForJDBCTime("uploadtime between", value1, value2, "uploadtime");
+            addCriterion("uploadtime between", value1, value2, "uploadtime");
             return (Criteria) this;
         }
 
         public Criteria andUploadtimeNotBetween(Date value1, Date value2) {
-            addCriterionForJDBCTime("uploadtime not between", value1, value2, "uploadtime");
+            addCriterion("uploadtime not between", value1, value2, "uploadtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixIsNull() {
+            addCriterion("suffix is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixIsNotNull() {
+            addCriterion("suffix is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixEqualTo(String value) {
+            addCriterion("suffix =", value, "suffix");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixNotEqualTo(String value) {
+            addCriterion("suffix <>", value, "suffix");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixGreaterThan(String value) {
+            addCriterion("suffix >", value, "suffix");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixGreaterThanOrEqualTo(String value) {
+            addCriterion("suffix >=", value, "suffix");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixLessThan(String value) {
+            addCriterion("suffix <", value, "suffix");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixLessThanOrEqualTo(String value) {
+            addCriterion("suffix <=", value, "suffix");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixLike(String value) {
+            addCriterion("suffix like", value, "suffix");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixNotLike(String value) {
+            addCriterion("suffix not like", value, "suffix");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixIn(List<String> values) {
+            addCriterion("suffix in", values, "suffix");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixNotIn(List<String> values) {
+            addCriterion("suffix not in", values, "suffix");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixBetween(String value1, String value2) {
+            addCriterion("suffix between", value1, value2, "suffix");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuffixNotBetween(String value1, String value2) {
+            addCriterion("suffix not between", value1, value2, "suffix");
             return (Criteria) this;
         }
     }
