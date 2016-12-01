@@ -100,7 +100,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.cesar.fileuploadtest.model.UploadFile" >
+  <insert id="insert" parameterType="com.cesar.fileuploadtest.model.UploadFile" useGeneratedKeys="true" keyProperty="id">
     insert into upload_file (id, filename, path, 
       uploadtime, suffix)
     values (#{id,jdbcType=INTEGER}, #{filename,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, 

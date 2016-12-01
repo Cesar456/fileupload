@@ -23,16 +23,19 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+
+    @RequestMapping(method = RequestMethod.GET, value = "/edit")
+    public String edit() {
+        return "/need/wangEditor";
+    }
+
+
     @RequestMapping(method = RequestMethod.POST, value = "/login")
     public String login_post(User user, HttpSession session) {
+        logger.info(user.toString());
         User user1 = userService.checkLogin(user.getName(), user.getPassword());
-        logger.info(user1.toString());
-        if (user1 == null) {
-            return "login";
-        } else {
-            session.setAttribute("user", user1);
-            return "redirect:/file/upload";
-        }
+        session.setAttribute("user", user1);
+        return "redirect:/file/upload";
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/login")

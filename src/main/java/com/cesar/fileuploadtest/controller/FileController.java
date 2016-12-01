@@ -38,11 +38,12 @@ public class FileController {
     /**
      * 通过普通方式上传文件
      * 还应该有前后端分离的方式
+     *
      * @param file 传入的文件
      * @return 文件上传成功的网页
      */
     @RequestMapping(value = "upload", method = RequestMethod.POST)
-    public String fileUpload2(@RequestParam("file") CommonsMultipartFile file){
+    public String fileUpload2(@RequestParam("file") CommonsMultipartFile file) {
         logger.debug("文件上传:" + file.getOriginalFilename());
         fileService.save(file);
         return "need/upload";
@@ -57,9 +58,22 @@ public class FileController {
 
 
     @RequestMapping(value = "download/{fileId}", method = RequestMethod.GET)
-    public String download(@PathVariable("fileId") int fileId, HttpServletRequest request,
-                           HttpServletResponse response) {
-        fileService.download(fileId, request, response);
+    public String download(@PathVariable("fileId") int fileId, HttpServletResponse response) {
+        fileService.download(fileId, response);
         return null;
     }
+
+    //TODO 像邮件一下加入插入附件的功能
+    @ResponseBody
+    @RequestMapping(value = "uploadImg", method = RequestMethod.POST)
+    public String uploadImg(@RequestParam("imgFile") CommonsMultipartFile imgFile) {
+        logger.debug("图片上传:" + imgFile.getOriginalFilename());
+        UploadFile uploadFile = fileService.save(imgFile);
+        if (uploadFile == null) {
+            return "error|错误信息提示...";
+        } else {
+            return "/file/download/" + uploadFile.getId();
+        }
+    }
+
 }

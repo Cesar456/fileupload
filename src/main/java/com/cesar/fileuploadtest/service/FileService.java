@@ -32,7 +32,13 @@ public class FileService {
     @Autowired
     private UploadFileMapper fileMapper;
 
-    public void save(CommonsMultipartFile file) {
+    /**
+     * 存储文件到硬盘
+     * 存储文件信息到数据库
+     * @param file 要存储的文件
+     * @return 文件信息的对象
+     */
+    public UploadFile save(CommonsMultipartFile file) {
         UploadFile uploadFile = new UploadFile();
         uploadFile.setFilename(file.getOriginalFilename());
         uploadFile.setUploadtime(new Date());
@@ -54,28 +60,30 @@ public class FileService {
             uploadFile.setSuffix(suffix);
             fileMapper.insert(uploadFile);
             logger.info("上传文件" + uploadFile.toString());
+            return uploadFile;
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
 
-    public List<UploadFile> getUploadFiles(int pagesize, int pagenum){
+    // TODO 需要分页
+    public List<UploadFile> getUploadFiles(int pagesize, int pagenum) {
         UploadFileExample example = new UploadFileExample();
         UploadFileExample.Criteria criteria = example.createCriteria();
         example.setOrderByClause("uploadtime");
-        List<UploadFile> uploadFiles = fileMapper.selectByExample(example);
-        return uploadFiles;
+        return fileMapper.selectByExample(example);
     }
 
-    public void download(int fileId, HttpServletRequest request, HttpServletResponse response) {
+    public void download(int fileId, HttpServletResponse response) {
         UploadFile file = fileMapper.selectByPrimaryKey(fileId);
         response.setCharacterEncoding("utf-8");
         response.setContentType("multipart/form-data");
 
         String name = Utils.transHanziToPinyin(file.getFilename());
-        if(StringUtils.isEmpty(name)){
-            name = file.getPath().substring(file.getPath().lastIndexOf("\\")+1);
+        if (StringUtils.isEmpty(name)) {
+            name = file.getPath().substring(file.getPath().lastIndexOf("\\") + 1);
         }
         response.setHeader("Content-Disposition", "attachment;fileName="
                 + name);
